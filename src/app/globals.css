@@ -1,0 +1,59 @@
+@import "tailwindcss";
+
+/* ===== ডিজাইন টোকেন (রং, ফন্ট) - এখান থেকে পুরো সাইটের রং বদলানো যায় ===== */
+@theme inline {
+  --font-sans: var(--font-hind), ui-sans-serif, system-ui, sans-serif;
+  --font-script: var(--font-script), "Brush Script MT", cursive;
+
+  --color-brand-50: #fff1f5;
+  --color-brand-100: #ffe0e9;
+  --color-brand-200: #ffc2d3;
+  --color-brand-300: #ff94b1;
+  --color-brand-400: #f95c86;
+  --color-brand-500: #ec2f63;
+  --color-brand-600: #db1450;
+  --color-brand-700: #b80e42;
+
+  --color-ink: #231f2b;
+  --color-muted: #6b6475;
+  --color-line: #f0dce3;
+  --color-blush: #fdf4f7;
+  --color-navy: #15182e;
+}
+
+@utility container-x {
+  margin-inline: auto;
+  width: 100%;
+  max-width: 80rem;
+  padding-inline: 1rem;
+  @media (min-width: 640px) { padding-inline: 1.5rem; }
+  @media (min-width: 1024px) { padding-inline: 2rem; }
+}
+
+@utility no-scrollbar {
+  scrollbar-width: none;
+  &::-webkit-scrollbar { display: none; }
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: #fff;
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* কীবোর্ড দিয়ে চললে ফোকাস দেখা যাবে */
+:focus-visible { outline: 2px solid var(--color-brand-500); outline-offset: 2px; }
+
+img { max-width: 100%; }
+
+@media (prefers-reduced-motion: reduce) {
+  * { animation-duration: 0.01ms !important; transition-duration: 0.01ms !important; scroll-behavior: auto !important; }
+}
+
+@keyframes toast-in { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+.toast-in { animation: toast-in 0.2s ease-out; }
+@keyframes pop { 0% { transform: scale(1); } 50% { transform: scale(1.25); } 100% { transform: scale(1); } }
+.pop { animation: pop 0.25s ease-out; }

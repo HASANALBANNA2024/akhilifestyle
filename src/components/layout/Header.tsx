@@ -1,0 +1,91 @@
+"use client";
+import Link from "next/link";
+import { useState } from "react";
+import { Logo } from "@/components/ui/Logo";
+import { Icon } from "@/components/ui/Icon";
+import { SearchBox } from "./SearchBox";
+import { useCart } from "@/context/CartContext";
+import { useAuth } from "@/context/AuthContext";
+import { useWishlist } from "@/context/WishlistContext";
+import type { Category } from "@/types";
+
+function Badge({ n }: { n: number }) {
+  if (!n) return null;
+  return (
+    <span className="absolute -right-1.5 -top-1.5 grid h-[18px] min-w-[18px] place-items-center rounded-full bg-brand-600 px-1 text-[10px] font-bold text-white">
+      {n > 99 ? "99+" : n}
+    </span>
+  );
+}
+
+function IconLink({ href, label, icon, badge = 0 }: { href: string; label: string; icon: string; badge?: number }) {
+  return (
+    <Link href={href} aria-label={label} className="relative grid h-10 w-10 place-items-center rounded-full text-ink hover:bg-brand-50">
+      <Icon name={icon} className="h-[22px] w-[22px]" />
+      <Badge n={badge} />
+    </Link>
+  );
+}
+
+// categories server (layout.tsx) থেকে আসে
+export function Header({ categories }: { categories: Category[] }) {
+  const { cart } = useCart();
+  const { user } = useAuth();
+  const { ids } = useWishlist();
+  const [menu, setMenu] = useState(false);
+  const top = categories.filter((c) => !c.parent_id);
+
+  return (
+    <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
+      <div className="container-x flex h-16 items-center gap-3">
+        <button className="grid h-10 w-10 place-items-center rounded-full hover:bg-brand-50 lg:hidden" onClick={() => setMenu(true)} aria-label="মেনু">
+          <Icon name="menu" />
+        </button>
+        <Logo />
+        <SearchBox className="mx-auto hidden max-w-xl flex-1 md:block" />
+        <div className="ml-auto flex items-center gap-1">
+          <IconLink href={user ? "/account" : "/login"} label="অ্যাকাউন্ট" icon="user" />
+          <IconLink href="/account/wishlist" label="পছন্দের তালিকা" icon="heart" badge={ids.size} />
+          <IconLink href="/cart" label="কার্ট" icon="bag" badge={cart.count} />
+        </div>
+      </div>
+
+      {/* মোবাইলে সার্চ নিচের লাইনে */}
+      <div className="container-x pb-3 md:hidden"><SearchBox /></div>
+
+      {/* ডেস্কটপ ক্যাটাগরি নেভ */}
+      <nav className="hidden border-t border-line lg:block" aria-label="ক্যাটাগরি">
+        <ul className="container-x no-scrollbar flex items-center gap-7 overflow-x-auto py-2.5 text-[15px] font-medium">
+          <li><Link href="/" className="hover:text-brand-600">হোম</Link></li>
+          {top.slice(0, 8).map((c) => (
+            <li key={c.id}><Link href={`/category/${c.slug}`} className="whitespace-nowrap hover:text-brand-600">{c.name}</Link></li>
+          ))}
+          <li><Link href="/shop" className="whitespace-nowrap text-brand-600 hover:underline">সব পণ্য</Link></li>
+        </ul>
+      </nav>
+
+      {/* মোবাইল সাইড মেনু */}
+      {menu && (
+        <div className="fixed inset-0 z-[60] lg:hidden">
+          <div className="absolute inset-0 bg-navy/50" onClick={() => setMenu(false)} />
+          <aside className="absolute left-0 top-0 h-full w-72 max-w-[85%] overflow-y-auto bg-white p-5 shadow-xl">
+            <div className="mb-5 flex items-center justify-between">
+              <Logo />
+              <button onClick={() => setMenu(false)} aria-label="বন্ধ করুন"><Icon name="x" /></button>
+            </div>
+            <ul className="space-y-1 text-[15px]" onClick={() => setMenu(false)}>
+              <li><Link className="block rounded-lg px-3 py-2.5 hover:bg-brand-50" href="/">হোম</Link></li>
+              <li><Link className="block rounded-lg px-3 py-2.5 hover:bg-brand-50" href="/shop">সব পণ্য</Link></li>
+              {top.map((c) => (
+                <li key={c.id}><Link className="block rounded-lg px-3 py-2.5 hover:bg-brand-50" href={`/category/${c.slug}`}>{c.name}</Link></li>
+              ))}
+              <li className="my-2 border-t border-line" />
+              <li><Link className="block rounded-lg px-3 py-2.5 hover:bg-brand-50" href="/track">অর্ডার ট্র্যাক করুন</Link></li>
+              <li><Link className="block rounded-lg px-3 py-2.5 hover:bg-brand-50" href="/contact">যোগাযোগ</Link></li>
+            </ul>
+          </aside>
+        </div>
+      )}
+    </header>
+  );
+}
