@@ -1,4 +1,4 @@
-name: Build & Deploy (Customer Website)
+name: Deploy (Customer Website)
 
 on:
   push:
@@ -6,21 +6,7 @@ on:
   workflow_dispatch:
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-          cache: npm
-      - run: npm install --no-audit --no-fund
-      - run: npm run build
-        env:
-          NEXT_PUBLIC_API_URL: ${{ secrets.NEXT_PUBLIC_API_URL }}
-
   deploy:
-    needs: build
     runs-on: ubuntu-latest
     steps:
       - name: Deploy to Server over SSH
@@ -31,10 +17,10 @@ jobs:
           password: ${{ secrets.SERVER_PASSWORD }}
           script_stop: true
           script: |
-            export PATH="$PATH:/usr/local/bin:/www/server/nodejs/*/bin"
+            export PATH="$(ls -d /www/server/nodejs/*/bin 2>/dev/null | tr '\n' ':')$PATH:/usr/local/bin"
+            node -v && pm2 -v
             cd /www/wwwroot/akhi_customer_panel/akhilifestyle
             git pull origin main
-            echo "NEXT_PUBLIC_API_URL=${{ secrets.NEXT_PUBLIC_API_URL }}" > .env.local
             npm install --no-audit --no-fund
             npm run build
             pm2 describe akhi-customer >/dev/null 2>&1 && pm2 restart akhi-customer || pm2 start "npx next start -p 3005" --name akhi-customer
