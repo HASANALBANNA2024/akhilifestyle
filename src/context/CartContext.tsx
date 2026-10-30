@@ -10,10 +10,10 @@ const EMPTY: CartView = { items: [], subtotal: 0, count: 0 };
 interface CartCtx {
   cart: CartView;
   loading: boolean;
-  busyId: number | null;                      // কোন পণ্যে কাজ চলছে
-  add: (productId: number, qty?: number) => Promise<boolean>;
-  setQty: (productId: number, qty: number) => Promise<void>;
-  remove: (productId: number) => Promise<void>;
+  busyId: string | null;                      // কোন সারিতে কাজ চলছে ("পণ্য:রং")
+  add: (productId: number, qty?: number, colorId?: number | null) => Promise<boolean>;
+  setQty: (productId: number, qty: number, colorId?: number) => Promise<void>;
+  remove: (productId: number, colorId?: number) => Promise<void>;
   clear: () => Promise<void>;
   refresh: () => Promise<void>;
 }
@@ -24,7 +24,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   const toast = useToast();
   const [cart, setCart] = useState<CartView>(EMPTY);
   const [loading, setLoading] = useState(true);
-  const [busyId, setBusyId] = useState<number | null>(null);
+  const [busyId, setBusyId] = useState<string | null>(null);
 
   const refresh = useCallback(async () => {
     try { setCart(await cartApi.get()); } catch { /* backend বন্ধ থাকলে খালি কার্ট */ }
@@ -47,7 +47,7 @@ export function CartProvider({ children }: { children: ReactNode }) {
   }, [cart.count, refresh]);
 
   // সব কার্ট অ্যাকশন একই নিয়মে: loading দেখাও -> API call -> state বসাও -> error হলে toast
-  const run = useCallback(async (id: number | null, fn: () => Promise<CartView>, okMsg?: string) => {
+  const run = useCallback(async (id: string | null, fn: () => Promise<CartView>, okMsg?: string) => {
     setBusyId(id);
     try {
       setCart(await fn());
@@ -61,9 +61,10 @@ export function CartProvider({ children }: { children: ReactNode }) {
     }
   }, [toast]);
 
-  const add = (id: number, qty = 1) => run(id, () => cartApi.add(id, qty), "কার্টে যোগ হয়েছে");
-  const setQty = async (id: number, qty: number) => { await run(id, () => cartApi.setQty(id, qty)); };
-  const remove = async (id: number) => { await run(id, () => cartApi.remove(id), "কার্ট থেকে সরানো হয়েছে"); };
+  const add = (id: number, qty = 1, colorId?: number | null) =>
+    run(`${id}:${colorId ?? 0}`, () => cartApi.add(id, qty, colorId), "কার্টে যোগ হয়েছে");
+  const setQty = async (id: number, qty: number, colorId = 0) => { await run(`${id}:${colorId}`, () => cartApi.setQty(id, qty, colorId)); };
+  const remove = async (id: number, colorId = 0) => { await run(`${id}:${colorId}`, () => cartApi.remove(id, colorId), "কার্ট থেকে সরানো হয়েছে"); };
   const clear = async () => { await run(null, () => cartApi.clear()); };
 
   return <Ctx.Provider value={{ cart, loading, busyId, add, setQty, remove, clear, refresh }}>{children}</Ctx.Provider>;

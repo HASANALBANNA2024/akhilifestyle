@@ -32,7 +32,7 @@ export default function CartPage() {
       ) : (
         <div className="grid gap-6 lg:grid-cols-[1fr_380px]">
           <div className="rounded-2xl border border-line bg-white px-4">
-            <ul className="divide-y divide-line">{cart.items.map((l) => <CartItemRow key={l.product_id} line={l} />)}</ul>
+            <ul className="divide-y divide-line">{cart.items.map((l) => <CartItemRow key={`${l.product_id}:${l.color_id ?? 0}`} line={l} />)}</ul>
             <div className="border-t border-line py-3 text-right">
               <button onClick={clear} className="text-sm font-medium text-brand-600 hover:underline">কার্ট খালি করুন</button>
             </div>

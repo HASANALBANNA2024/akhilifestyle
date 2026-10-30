@@ -3,6 +3,7 @@ import { SmartImage } from "@/components/ui/SmartImage";
 import { PriceTag } from "./PriceTag";
 import { WishlistButton } from "./WishlistButton";
 import { AddToCartButton } from "./AddToCartButton";
+import { buttonClass } from "@/components/ui/Button";
 import { discountPercent } from "@/lib/format";
 import type { Product } from "@/types";
 
@@ -24,7 +25,19 @@ export function ProductCard({ p, priority = false }: { p: Product; priority?: bo
         {p.name}
       </Link>
       <div className="mt-1"><PriceTag price={p.price} compare={p.compare_at_price} /></div>
-      <div className="mt-3"><AddToCartButton productId={p.id} stock={p.stock} /></div>
+      {p.colors && p.colors.length > 0 && (
+        <div className="mt-1.5 flex items-center gap-1" aria-label="রং">
+          {p.colors.slice(0, 5).map((c) => (
+            <i key={c.id} title={c.name} className="inline-block h-3.5 w-3.5 rounded-full border border-black/10" style={{ background: c.hex || "#ddd" }} />
+          ))}
+          {p.colors.length > 5 && <span className="text-xs text-muted">+{p.colors.length - 5}</span>}
+        </div>
+      )}
+      <div className="mt-3">
+        {p.colors && p.colors.length > 0 && p.stock > 0
+          ? <Link href={`/product/${p.slug}`} className={buttonClass("outline", "sm", "w-full")}>রং বাছুন</Link>
+          : <AddToCartButton productId={p.id} stock={p.stock} />}
+      </div>
     </article>
   );
 }

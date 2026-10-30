@@ -1,6 +1,7 @@
 // Backend (FastAPI) এর response এর TypeScript টাইপ। schemas.py এর সাথে মিলিয়ে লেখা।
 
 export interface ProductImage { id: number; url: string; sort_order: number }
+export interface ProductColor { id: number; name: string; hex: string | null; stock: number; images: string[] }
 
 export interface Product {
   id: number;
@@ -12,6 +13,7 @@ export interface Product {
   compare_at_price: number | null;
   stock: number;
   images: ProductImage[];
+  colors?: ProductColor[];
 }
 
 export interface Category {
@@ -32,6 +34,9 @@ export interface Banner { id: number; title: string | null; image_url: string; l
 
 export interface CartLine {
   product_id: number;
+  color_id?: number;
+  color_name?: string | null;
+  color_hex?: string | null;
   name: string;
   slug: string;
   image: string | null;

@@ -1,11 +1,12 @@
 "use client";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { Button } from "@/components/ui/Button";
 import { Icon } from "@/components/ui/Icon";
 import { useCart } from "@/context/CartContext";
 import { useToast } from "@/context/ToastContext";
 import { WishlistButton } from "./WishlistButton";
+import { useColor } from "./ColorContext";
 import { SITE } from "@/lib/site";
 import type { Product } from "@/types";
 
@@ -16,12 +17,15 @@ export function BuyBox({ product }: { product: Product }) {
   const { add } = useCart();
   const [qty, setQty] = useState(1);
   const [busy, setBusy] = useState<"cart" | "buy" | null>(null);
-  const out = product.stock < 1;
-  const max = Math.min(50, Math.max(1, product.stock));
+  const { colors, color, setColorId } = useColor();
+  const stock = colors.length ? (color?.stock ?? 0) : product.stock;   // রং থাকলে ওই রঙের স্টক
+  const out = stock < 1;
+  const max = Math.min(50, Math.max(1, stock));
+  useEffect(() => { setQty(1); }, [color?.id]);
 
   const addToCart = async (goCheckout: boolean) => {
     setBusy(goCheckout ? "buy" : "cart");
-    const ok = await add(product.id, qty);
+    const ok = await add(product.id, qty, color?.id ?? null);
     setBusy(null);
     if (ok && goCheckout) router.push("/checkout");
   };
@@ -36,6 +40,23 @@ export function BuyBox({ product }: { product: Product }) {
 
   return (
     <div className="space-y-4">
+      {colors.length > 0 && (
+        <div>
+          <span className="mb-1.5 block text-sm font-medium">রং: <b className="font-semibold">{color?.name}</b></span>
+          <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="রং বাছুন">
+            {colors.map((c) => {
+              const on = c.id === color?.id;
+              return (
+                <button key={c.id} type="button" role="radio" aria-checked={on} onClick={() => setColorId(c.id)}
+                  className={`inline-flex items-center gap-2 rounded-full border-2 px-3 py-1.5 text-sm font-medium transition-colors ${on ? "border-brand-600 bg-brand-50" : "border-line hover:border-brand-300"} ${c.stock < 1 ? "opacity-50" : ""}`}>
+                  {c.hex && <i className="inline-block h-4 w-4 rounded-full border border-black/10" style={{ background: c.hex }} />}
+                  <span className={c.stock < 1 ? "line-through" : ""}>{c.name}</span>
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
       <div>
         <span className="mb-1.5 block text-sm font-medium">পরিমাণ</span>
         <div className="inline-flex items-center rounded-lg border border-line">
@@ -45,8 +66,8 @@ export function BuyBox({ product }: { product: Product }) {
           <button aria-label="বাড়ান" className="grid h-11 w-11 place-items-center disabled:opacity-40" disabled={qty >= max || out}
             onClick={() => setQty((q) => Math.min(max, q + 1))}><Icon name="plus" className="h-4 w-4" /></button>
         </div>
-        <span className={`ml-3 text-sm ${out ? "text-brand-600" : product.stock <= 5 ? "text-amber-600" : "text-emerald-600"}`}>
-          {out ? "স্টক শেষ" : product.stock <= 5 ? `মাত্র ${product.stock}টি বাকি` : "স্টকে আছে"}
+        <span className={`ml-3 text-sm ${out ? "text-brand-600" : stock <= 5 ? "text-amber-600" : "text-emerald-600"}`}>
+          {out ? "স্টক শেষ" : stock <= 5 ? `মাত্র ${stock}টি বাকি` : "স্টকে আছে"}
         </span>
       </div>
 
