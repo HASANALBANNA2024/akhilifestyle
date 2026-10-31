@@ -10,6 +10,7 @@ import { catalogApi } from "@/lib/api/catalog";
 import { safe } from "@/lib/api/safe";
 import { SITE } from "@/lib/site";
 import { organizationJsonLd, websiteJsonLd } from "@/lib/seo";
+import Script from "next/script";
 
 // ফন্ট: বাংলা + ইংরেজি দুটোর জন্য Hind Siliguri, লোগোর জন্য Dancing Script
 const hind = Hind_Siliguri({
@@ -43,11 +44,26 @@ export const viewport: Viewport = {
   themeColor: "#db1450",
 };
 
+
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const categories = await safe(catalogApi.categories(), []);
   return (
     <html lang="bn" className={`${hind.variable} ${script.variable}`}>
       <body className="min-h-screen bg-white">
+        <Script id="meta-pixel" strategy="afterInteractive">
+  {`
+    !function(f,b,e,v,n,t,s)
+    {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
+    n.callMethod.apply(n,arguments):n.queue.push(arguments)};
+    if(!f._fbq)f._fbq=n;n.push=n;n.loaded=!0;n.version='2.0';
+    n.queue=[];t=b.createElement(e);t.async=!0;
+    t.src=v;s=b.getElementsByTagName(e)[0];
+    s.parentNode.insertBefore(t,s)}(window, document,'script',
+    'https://connect.facebook.net/en_US/fbevents.js');
+    fbq('init', '2603592470126295');
+    fbq('track', 'PageView');
+  `}
+</Script>
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteJsonLd) }} />
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <Providers>
@@ -58,6 +74,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
           <SupportFab />
         </Providers>
       </body>
+      
     </html>
   );
 }
