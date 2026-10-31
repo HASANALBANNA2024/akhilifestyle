@@ -7,8 +7,8 @@ interface Ctx { colors: ProductColor[]; color: ProductColor | null; setColorId: 
 const ColorCtx = createContext<Ctx>({ colors: [], color: null, setColorId: () => {} });
 
 export function ColorProvider({ colors, children }: { colors: ProductColor[]; children: ReactNode }) {
-  const first = colors.find((c) => c.stock > 0) ?? colors[0] ?? null; // প্রথমে স্টক আছে এমন রং বাছা থাকে
-  const [colorId, setColorId] = useState<number | null>(first?.id ?? null);
+  // শুরুতে কোনো রং বাছা থাকে না: পণ্যের নিজের মূল ছবি দেখায়। রং চাপলে সেই রঙের ছবি বড় ছবি হয়।
+  const [colorId, setColorId] = useState<number | null>(null);
   const value = useMemo<Ctx>(
     () => ({ colors, color: colors.find((c) => c.id === colorId) ?? null, setColorId }),
     [colors, colorId],

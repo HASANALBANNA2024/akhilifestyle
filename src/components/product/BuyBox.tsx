@@ -18,12 +18,13 @@ export function BuyBox({ product }: { product: Product }) {
   const [qty, setQty] = useState(1);
   const [busy, setBusy] = useState<"cart" | "buy" | null>(null);
   const { colors, color, setColorId } = useColor();
-  const stock = colors.length ? (color?.stock ?? 0) : product.stock;   // রং থাকলে ওই রঙের স্টক
+  const stock = color ? color.stock : product.stock;   // রং বাছা থাকলে ওই রঙের স্টক
   const out = stock < 1;
   const max = Math.min(50, Math.max(1, stock));
   useEffect(() => { setQty(1); }, [color?.id]);
 
   const addToCart = async (goCheckout: boolean) => {
+    if (colors.length && !color) { toast("আগে একটা রং বাছুন", "error"); return; }
     setBusy(goCheckout ? "buy" : "cart");
     const ok = await add(product.id, qty, color?.id ?? null);
     setBusy(null);
@@ -42,7 +43,7 @@ export function BuyBox({ product }: { product: Product }) {
     <div className="space-y-4">
       {colors.length > 0 && (
         <div>
-          <span className="mb-1.5 block text-sm font-medium">রং: <b className="font-semibold">{color?.name}</b></span>
+          <span className="mb-1.5 block text-sm font-medium">রং: <b className="font-semibold">{color?.name ?? "বাছুন"}</b></span>
           <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="রং বাছুন">
             {colors.map((c) => {
               const on = c.id === color?.id;

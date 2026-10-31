@@ -7,6 +7,7 @@ import { StarRating } from "@/components/ui/StarRating";
 import { ProductGallery } from "@/components/product/ProductGallery";
 import { PriceTag } from "@/components/product/PriceTag";
 import { BuyBox } from "@/components/product/BuyBox";
+import { ColorProvider } from "@/components/product/ColorContext";
 import { ProductTabs } from "@/components/product/ProductTabs";
 import { ProductGrid } from "@/components/product/ProductGrid";
 import { SectionHeader } from "@/components/home/SectionHeader";
@@ -79,6 +80,7 @@ export default async function ProductPage({ params }: Props) {
 
       <Breadcrumb items={crumbs} />
 
+      <ColorProvider colors={p.colors ?? []}>
       <div className="grid gap-8 md:grid-cols-2">
         <ProductGallery images={p.images} name={p.name} productId={p.id} />
 
@@ -104,6 +106,7 @@ export default async function ProductPage({ params }: Props) {
           </ul>
         </div>
       </div>
+      </ColorProvider>
 
       <ProductTabs slug={p.slug} price={p.price} description={p.description} reviews={reviews} zones={zones} />
 
