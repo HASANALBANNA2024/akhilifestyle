@@ -38,7 +38,7 @@ export default function CartPage() {
             </div>
           </div>
 
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:sticky lg:top-20 lg:self-start">
             <OrderSummary subtotal={cart.subtotal} total={cart.subtotal} count={cart.count}>
               {belowMin && <p className="mb-3 rounded-lg bg-amber-50 p-3 text-sm text-amber-800">সর্বনিম্ন অর্ডার {taka(minOrder)}। আরও {taka(minOrder - cart.subtotal)} এর পণ্য যোগ করুন।</p>}
               {hasOut && <p className="mb-3 rounded-lg bg-red-50 p-3 text-sm text-red-700">কিছু পণ্যের স্টক কম। পরিমাণ কমিয়ে নিন।</p>}

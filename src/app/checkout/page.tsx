@@ -126,7 +126,7 @@ export default function CheckoutPage() {
             </section>
           </div>
 
-          <div className="lg:sticky lg:top-32 lg:self-start">
+          <div className="lg:sticky lg:top-20 lg:self-start">
             <OrderSummary subtotal={summary?.subtotal ?? cart.subtotal} discount={summary?.discount}
               shipping={summary?.shipping_fee} total={summary?.total ?? cart.subtotal} count={cart.count}>
               <Button size="lg" className="w-full" loading={placing} onClick={placeOrder}
