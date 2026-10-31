@@ -20,11 +20,11 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
   if (n === 0) {
     return (
       <section className="relative overflow-hidden rounded-2xl bg-gradient-to-br from-brand-100 via-brand-50 to-white">
-        <div className="px-6 py-14 md:px-14 md:py-24">
-          <p className="text-sm font-semibold text-brand-600">নতুন কালেকশন</p>
-          <h1 className="mt-2 text-4xl font-extrabold leading-tight md:text-6xl">স্টাইলিশ ব্যাগ<br />প্রতিটি অনুষ্ঠানের জন্য</h1>
-          <p className="mt-3 max-w-md text-muted">সেরা দামে সেরা কালেকশন, সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
-          <Link href="/shop" className={buttonClass("primary", "lg", "mt-6")}>এখনই কিনুন <Icon name="chevron-right" className="h-4 w-4" /></Link>
+        <div className="px-5 py-4 md:px-10 md:py-5">
+          <p className="text-xs font-semibold text-brand-600">নতুন কালেকশন</p>
+          <h1 className="mt-0.5 text-xl font-extrabold leading-tight md:text-2xl">স্টাইলিশ ব্যাগ<br />প্রতিটি অনুষ্ঠানের জন্য</h1>
+          <p className="mt-1.5 max-w-md text-sm text-muted">সেরা দামে সেরা কালেকশন, সারা বাংলাদেশে ক্যাশ অন ডেলিভারি।</p>
+          <Link href="/shop" className={buttonClass("primary", "sm", "mt-3")}>এখনই কিনুন <Icon name="chevron-right" className="h-4 w-4" /></Link>
         </div>
       </section>
     );
@@ -36,7 +36,7 @@ export function HeroSlider({ banners }: { banners: Banner[] }) {
   );
   return (
     <section className="relative overflow-hidden rounded-2xl bg-brand-50" aria-roledescription="carousel">
-      <div className="aspect-[16/9] sm:aspect-[21/8]">
+      <div className="aspect-[16/6] sm:aspect-[21/5]">
         {cur.link_url ? (
           cur.link_url.startsWith("http")
             ? <a href={cur.link_url} className="block h-full">{inner}</a>

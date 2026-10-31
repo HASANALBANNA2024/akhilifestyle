@@ -68,7 +68,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
         <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(organizationJsonLd) }} />
         <Providers>
           <Header categories={categories} />
-          <main className="container-x py-5 md:py-8">{children}</main>
+          <main className="container-x py-2.5 md:py-3">{children}</main>
           <Footer />
           <MobileNav />
           <SupportFab />

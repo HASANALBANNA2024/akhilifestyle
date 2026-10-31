@@ -37,13 +37,23 @@ export function Header({ categories }: { categories: Category[] }) {
 
   return (
     <header className="sticky top-0 z-40 border-b border-line bg-white/95 backdrop-blur">
-      <div className="container-x flex h-16 items-center gap-3">
+      <div className="container-x flex h-14 items-center gap-3 lg:gap-5">
         <button className="grid h-10 w-10 place-items-center rounded-full hover:bg-brand-50 lg:hidden" onClick={() => setMenu(true)} aria-label="মেনু">
           <Icon name="menu" />
         </button>
         <Logo />
-        <SearchBox className="mx-auto hidden max-w-xl flex-1 md:block" />
-        <div className="ml-auto flex items-center gap-1">
+        {/* ডেস্কটপে মেনু লোগোর পাশেই, তাই আলাদা সারি লাগে না */}
+        <nav className="hidden min-w-0 lg:block" aria-label="ক্যাটাগরি">
+          <ul className="no-scrollbar flex items-center gap-5 overflow-x-auto text-[14px] font-medium">
+            <li><Link href="/" className="whitespace-nowrap hover:text-brand-600">হোম</Link></li>
+            {top.slice(0, 5).map((c) => (
+              <li key={c.id}><Link href={`/category/${c.slug}`} className="whitespace-nowrap hover:text-brand-600">{c.name}</Link></li>
+            ))}
+            <li><Link href="/shop" className="whitespace-nowrap text-brand-600 hover:underline">সব পণ্য</Link></li>
+          </ul>
+        </nav>
+        <SearchBox className="mx-auto hidden max-w-md flex-1 md:block" />
+        <div className="ml-auto flex items-center gap-1 md:ml-0">
           <IconLink href={user ? "/account" : "/login"} label="অ্যাকাউন্ট" icon="user" />
           <IconLink href="/account/wishlist" label="পছন্দের তালিকা" icon="heart" badge={ids.size} />
           <IconLink href="/cart" label="কার্ট" icon="bag" badge={cart.count} />
@@ -51,18 +61,7 @@ export function Header({ categories }: { categories: Category[] }) {
       </div>
 
       {/* মোবাইলে সার্চ নিচের লাইনে */}
-      <div className="container-x pb-3 md:hidden"><SearchBox /></div>
-
-      {/* ডেস্কটপ ক্যাটাগরি নেভ */}
-      <nav className="hidden border-t border-line lg:block" aria-label="ক্যাটাগরি">
-        <ul className="container-x no-scrollbar flex items-center gap-7 overflow-x-auto py-2.5 text-[15px] font-medium">
-          <li><Link href="/" className="hover:text-brand-600">হোম</Link></li>
-          {top.slice(0, 8).map((c) => (
-            <li key={c.id}><Link href={`/category/${c.slug}`} className="whitespace-nowrap hover:text-brand-600">{c.name}</Link></li>
-          ))}
-          <li><Link href="/shop" className="whitespace-nowrap text-brand-600 hover:underline">সব পণ্য</Link></li>
-        </ul>
-      </nav>
+      <div className="container-x pb-2 md:hidden"><SearchBox /></div>
 
       {/* মোবাইল সাইড মেনু */}
       {menu && (

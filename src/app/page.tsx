@@ -25,7 +25,7 @@ export default async function HomePage() {
   const topCategories = categories.filter((c) => !c.parent_id);
 
   return (
-    <div className="space-y-9 md:space-y-12">
+    <div className="space-y-2.5 md:space-y-3">
       <HeroSlider banners={banners} />
       <FeatureStrip />
       <CategoryCircles categories={topCategories} />

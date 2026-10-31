@@ -84,3 +84,19 @@ export const ACCOUNT_MENU = [
   { href: "/account/notifications", label: "নোটিফিকেশন", icon: "bell" },
   { href: "/account/support", label: "সাপোর্ট / চ্যাট", icon: "chat" },
 ] as const;
+
+// Steadfast কুরিয়ারের delivery_status -> বাংলা লেখা (backend এর steadfast.py র সাথে মিল রাখা)
+export const COURIER_STATUS_LABEL: Record<string, string> = {
+  in_review: "কুরিয়ার অনুমোদনের অপেক্ষায়",
+  pending: "কুরিয়ারে বুক হয়েছে, শীঘ্রই পাঠানো হবে",
+  hold: "পার্সেল হোল্ডে আছে, আমরা যোগাযোগ করব",
+  delivered_approval_pending: "ডেলিভারি হয়েছে, কুরিয়ার যাচাই করছে",
+  partial_delivered_approval_pending: "আংশিক ডেলিভারি, কুরিয়ার যাচাই করছে",
+  cancelled_approval_pending: "ডেলিভারি হয়নি, কুরিয়ার যাচাই করছে",
+  unknown_approval_pending: "কুরিয়ার যাচাই করছে",
+  delivered: "ডেলিভারি সম্পন্ন",
+  partial_delivered: "আংশিক ডেলিভারি সম্পন্ন",
+  cancelled: "ডেলিভারি হয়নি, পণ্য ফেরত আসছে",
+  exceptional: "পার্সেলে সমস্যা হয়েছে, আমরা যোগাযোগ করব",
+  unknown: "কুরিয়ারের তথ্য পাওয়া যায়নি",
+};

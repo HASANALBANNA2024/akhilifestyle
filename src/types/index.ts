@@ -93,6 +93,7 @@ export interface Order {
   ship_address: string;
   courier: string | null;
   tracking_code: string | null;
+  courier_status?: string | null;
   created_at: string;
   items: OrderItem[];
 }

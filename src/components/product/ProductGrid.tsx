@@ -1,9 +1,10 @@
 import { ProductCard } from "./ProductCard";
 import type { Product } from "@/types";
 
-export function ProductGrid({ products, cols = "lg:grid-cols-4" }: { products: Product[]; cols?: string }) {
+// কার্ডের প্রস্থ নির্দিষ্ট (সর্বোচ্চ ~১৩ rem), তাই সব জায়গায় একই মাপ। `cols` আগের কলের সাথে মিল রাখতে আছে।
+export function ProductGrid({ products }: { products: Product[]; cols?: string }) {
   return (
-    <div className={`grid grid-cols-2 gap-3 sm:grid-cols-3 sm:gap-4 ${cols}`}>
+    <div className="grid grid-cols-2 gap-2.5 sm:grid-cols-3 sm:gap-3 lg:grid-cols-[repeat(auto-fill,minmax(10rem,13rem))]">
       {products.map((p, i) => <ProductCard key={p.id} p={p} priority={i < 4} />)}
     </div>
   );
